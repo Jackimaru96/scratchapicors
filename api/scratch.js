@@ -1,8 +1,18 @@
 const axios = require("axios");
-const cors = require("cors")();
+
+const setCorsHeaders = (res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
+};
 
 module.exports = async (req, res) => {
-  await cors(req, res);
+  setCorsHeaders(res);
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
 
   const { username } = req.query;
 
@@ -13,12 +23,14 @@ module.exports = async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.scratch.mit.edu/users/${username}/projects`
+      `https://api.scratch.mit.edu/users/${username}`
     );
     res.send(response.data);
   } catch (error) {
-    res.status(500).send({
-      error: "An error occurred while fetching data from the Scratch API.",
-    });
+    res
+      .status(500)
+      .send({
+        error: "An error occurred while fetching data from the Scratch API.",
+      });
   }
 };
