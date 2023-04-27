@@ -23,14 +23,12 @@ module.exports = async (req, res) => {
 
   try {
     const response = await axios.get(
-      `https://api.scratch.mit.edu/users/${username}`
+      `https://api.scratch.mit.edu/users/${username}/projects`
     );
     res.send(response.data);
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        error: "An error occurred while fetching data from the Scratch API.",
-      });
+    res.status(500).send({
+      error: "An error occurred while fetching data from the Scratch API.",
+    });
   }
 };
